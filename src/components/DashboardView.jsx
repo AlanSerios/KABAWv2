@@ -174,8 +174,8 @@ const DashboardView = () => {
       <motion.div 
         initial={{ opacity: 0, y: -10 }}
         animate={{ opacity: 1, y: 0 }}
-        className="relative w-full rounded-3xl overflow-hidden mb-8 shadow-sm border border-slate-200/50"
-        style={{ height: '380px' }}
+        className="relative w-full rounded-3xl overflow-hidden mb-8 shadow-sm border border-slate-200/50 shrink-0"
+        style={{ height: '380px', minHeight: '380px', flexShrink: 0 }}
       >
         {/* Read-Only Mini Map Background */}
         <div className="absolute inset-0 z-0">
