@@ -62,44 +62,6 @@ export default function AppLayout({ zones, setZones, activeZoneId, setActiveZone
            </div>
            
            <div className="flex items-center gap-3 relative">
-             <div 
-               className="w-8 h-8 rounded-full border border-slate-200 overflow-hidden cursor-pointer hover:ring-2 hover:ring-emerald-500/50 transition-all flex items-center justify-center bg-slate-100"
-               onClick={() => setIsProfileMenuOpen(!isProfileMenuOpen)}
-             >
-               {/* Placeholder for user to add profile picture */}
-               <img 
-                 src="https://api.dicebear.com/7.x/notionists/svg?seed=Kabaw&backgroundColor=transparent" 
-                 alt="Profile" 
-                 className="w-full h-full object-cover"
-               />
-             </div>
-             
-             {isProfileMenuOpen && (
-               <>
-                 <div className="fixed inset-0 z-40" onClick={() => setIsProfileMenuOpen(false)}></div>
-                 <div 
-                   className="absolute top-10 right-0 w-56 bg-white/80 backdrop-blur-xl border border-slate-200/60 rounded-xl shadow-xl z-50 py-1.5 flex flex-col gap-0.5 animate-in fade-in zoom-in-95 duration-200 origin-top-right overflow-hidden"
-                 >
-                   <div className="px-3 py-2 mb-1 border-b border-slate-100/50">
-                     <span className="block text-sm font-semibold text-slate-800">Kabaw Admin</span>
-                     <span className="block text-xs text-slate-500">admin@kabaw.ph</span>
-                   </div>
-                   <button className="flex items-center gap-2 px-3 py-2 mx-1 text-sm text-slate-600 hover:text-emerald-700 hover:bg-emerald-50/50 rounded-md transition-colors text-left">
-                     <Users size={16} /> My Profile
-                   </button>
-                   <button className="flex items-center gap-2 px-3 py-2 mx-1 text-sm text-slate-600 hover:text-emerald-700 hover:bg-emerald-50/50 rounded-md transition-colors text-left">
-                     <Settings size={16} /> Preferences
-                   </button>
-                   <div className="h-px bg-slate-100/50 my-1 mx-2" />
-                   <button 
-                     onClick={() => navigate('/login')}
-                     className="flex items-center gap-2 px-3 py-2 mx-1 text-sm text-rose-600 hover:bg-rose-50/50 rounded-md transition-colors text-left"
-                   >
-                     <LogOut size={16} /> Sign out
-                   </button>
-                 </div>
-               </>
-             )}
            </div>
          </div>
 

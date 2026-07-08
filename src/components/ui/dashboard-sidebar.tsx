@@ -51,18 +51,54 @@ const mockBottomItems = [
   { id: 'logout', title: 'Log out', icon: LogOut, path: '/login' },
 ];
 
+import { useNavigate } from 'react-router-dom';
+
 export function UserProfileBlock() {
+  const [isOpen, setIsOpen] = useState(false);
+  const navigate = useNavigate();
+
   return (
     <div className="relative">
-      <div className="flex items-center gap-3 px-2 py-3 mb-4 rounded-lg bg-black/5 dark:bg-white/5 border border-black/5 dark:border-white/5 select-none cursor-default">
+      <div 
+        onClick={() => setIsOpen(!isOpen)}
+        className="flex items-center gap-3 px-2 py-3 mb-4 rounded-lg bg-black/5 dark:bg-white/5 border border-black/5 dark:border-white/5 select-none cursor-pointer hover:bg-black/10 transition-colors"
+      >
         <div className="w-9 h-9 rounded-full overflow-hidden border-2 border-emerald-500/20 shadow-sm shrink-0">
           <img src="https://api.dicebear.com/7.x/avataaars/svg?seed=Felix&backgroundColor=e2e8f0" alt="User Avatar" className="w-full h-full object-cover bg-slate-100" />
         </div>
-        <div className="flex flex-col overflow-hidden text-left">
+        <div className="flex flex-col overflow-hidden text-left flex-1">
           <span className="text-[14px] font-semibold leading-none mb-1 text-slate-900 truncate max-w-[120px]">Alan Serios</span>
           <span className="text-[11px] font-medium text-emerald-600 leading-none">System Admin</span>
         </div>
+        <ChevronDown size={14} className={`text-slate-400 transition-transform ${isOpen ? 'rotate-180' : ''}`} />
       </div>
+
+      {isOpen && (
+        <>
+          <div className="fixed inset-0 z-40" onClick={() => setIsOpen(false)}></div>
+          <div 
+            className="absolute top-[60px] left-0 w-[236px] bg-white/95 backdrop-blur-xl border border-slate-200/60 rounded-xl shadow-xl z-50 py-1.5 flex flex-col gap-0.5 animate-in fade-in zoom-in-95 duration-200 origin-top-left overflow-hidden"
+          >
+            <div className="px-3 py-2 mb-1 border-b border-slate-100/50">
+              <span className="block text-sm font-semibold text-slate-800">Alan Serios</span>
+              <span className="block text-xs text-slate-500">alan@kabaw.ph</span>
+            </div>
+            <button className="flex items-center gap-2 px-3 py-2 mx-1 text-sm text-slate-600 hover:text-emerald-700 hover:bg-emerald-50/50 rounded-md transition-colors text-left">
+              <Users size={16} /> My Profile
+            </button>
+            <button className="flex items-center gap-2 px-3 py-2 mx-1 text-sm text-slate-600 hover:text-emerald-700 hover:bg-emerald-50/50 rounded-md transition-colors text-left">
+              <Settings size={16} /> Preferences
+            </button>
+            <div className="h-px bg-slate-100/50 my-1 mx-2" />
+            <button 
+              onClick={() => navigate('/login')}
+              className="flex items-center gap-2 px-3 py-2 mx-1 text-sm text-rose-600 hover:bg-rose-50/50 rounded-md transition-colors text-left"
+            >
+              <LogOut size={16} /> Sign out
+            </button>
+          </div>
+        </>
+      )}
     </div>
   );
 }
