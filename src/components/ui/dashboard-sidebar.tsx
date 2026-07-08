@@ -39,17 +39,13 @@ export type NavGroupData = {
 const mockNavGroups = [
   {
     items: [
-      { id: 'search', title: 'Search', icon: Search, shortcut: '⌘K' },
       { id: 'home', title: 'Dashboard', icon: LayoutDashboard, path: '/dashboard' },
       { id: 'map', title: 'Live Map', icon: Globe, path: '/dashboard/map' },
     ]
   }
 ];
 
-const mockBottomItems = [
-  { id: 'settings', title: 'Settings', icon: Settings },
-  { id: 'logout', title: 'Log out', icon: LogOut, path: '/login' },
-];
+const mockBottomItems = [];
 
 import { useNavigate } from 'react-router-dom';
 

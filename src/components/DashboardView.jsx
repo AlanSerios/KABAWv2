@@ -202,24 +202,24 @@ const DashboardView = () => {
         {/* Header Content */}
         <div className="absolute inset-0 z-20 flex flex-col justify-end p-8 pointer-events-none">
           <div className="flex items-end justify-between w-full">
-            <div>
-              <div className="inline-flex items-center gap-2 px-3 py-1 bg-emerald-500/20 border border-emerald-400/30 backdrop-blur-md rounded-full text-emerald-300 text-xs font-bold tracking-widest uppercase mb-3">
-                <div className="w-2 h-2 bg-emerald-400 rounded-full animate-pulse"></div>
+            <div className="bg-slate-900/40 backdrop-blur-md border border-white/10 p-6 rounded-2xl shadow-2xl pointer-events-auto max-w-2xl">
+              <div className="inline-flex items-center gap-2 px-3 py-1 bg-emerald-500/20 border border-emerald-400/30 backdrop-blur-md rounded-full text-emerald-300 text-xs font-bold tracking-widest uppercase mb-4 shadow-sm">
+                <div className="w-2 h-2 bg-emerald-400 rounded-full animate-pulse shadow-[0_0_8px_rgba(52,211,153,0.8)]"></div>
                 Active Monitoring
               </div>
-              <h1 className="text-4xl font-bold text-white tracking-tight mb-2 drop-shadow-md">{activeZone.name}</h1>
-              <p className="text-slate-300 flex items-center gap-2 font-medium drop-shadow-md">
-                <MapPin size={16} className="text-emerald-400" /> 
+              <h1 className="text-5xl lg:text-6xl font-black text-white tracking-tight mb-2 drop-shadow-xl">{activeZone.name}</h1>
+              <p className="text-slate-200 flex items-center gap-2 font-medium drop-shadow-md text-base lg:text-lg">
+                <MapPin size={18} className="text-emerald-400" /> 
                 Location: {activeZone.lat.toFixed(4)}, {activeZone.lng.toFixed(4)}
               </p>
             </div>
             
             <button 
               onClick={() => navigate('/dashboard/map')}
-              className="pointer-events-auto flex items-center gap-2 bg-white/10 hover:bg-white/20 backdrop-blur-md border border-white/20 text-white px-5 py-3 rounded-xl font-semibold transition-all shadow-lg hover:shadow-xl active:scale-95 group"
+              className="pointer-events-auto flex items-center gap-2 bg-white/10 hover:bg-white/20 backdrop-blur-xl border border-white/20 text-white px-6 py-4 rounded-xl font-bold transition-all shadow-xl hover:shadow-2xl active:scale-95 group text-lg"
             >
               View on Live Map
-              <ArrowUpRight size={18} className="text-emerald-400 group-hover:translate-x-0.5 group-hover:-translate-y-0.5 transition-transform" />
+              <ArrowUpRight size={20} className="text-emerald-400 group-hover:translate-x-1 group-hover:-translate-y-1 transition-transform" />
             </button>
           </div>
         </div>
