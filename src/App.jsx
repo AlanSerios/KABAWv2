@@ -4,6 +4,7 @@ import Sidebar from './components/Sidebar';
 import DashboardView from './components/DashboardView';
 import LiveMapView from './components/LiveMapView';
 import LoginPage from './components/LoginPage';
+import OAuthCallbackPage from './components/OAuthCallbackPage';
 import SignupPage from './components/SignupPage';
 import ForgotPasswordPage from './components/ForgotPasswordPage';
 import './App.css';
@@ -34,6 +35,7 @@ function App() {
         
         <Route path="/login" element={<LoginPage />} />
         <Route path="/signup" element={<SignupPage />} />
+        <Route path="/oauth/callback" element={<OAuthCallbackPage />} />
         <Route path="/forgot-password" element={<ForgotPasswordPage />} />
         
         <Route path="/dashboard" element={<DashboardLayout zones={zones} setZones={setZones} activeZoneId={activeZoneId} setActiveZoneId={setActiveZoneId} />}>

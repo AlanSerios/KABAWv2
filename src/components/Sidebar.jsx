@@ -2,10 +2,17 @@ import React from 'react';
 import { List, SquaresFour, ChartLineUp, MapTrifold, Lifebuoy, Gear, CaretDown, PlusCircle } from '@phosphor-icons/react';
 import { useNavigate, useLocation } from 'react-router-dom';
 import textLogo from '../assets/kabaw_text_logo.png';
+import { getAuthUser, getUserDisplayName, getUserInitial } from '../api/auth';
 
 const Sidebar = ({ sidebarOpen, setSidebarOpen }) => {
   const navigate = useNavigate();
   const location = useLocation();
+  const user = getAuthUser();
+  const displayName = getUserDisplayName(user);
+  const userInitial = getUserInitial(user);
+  const accountLabel = user?.role
+    ? `${user.role.charAt(0).toUpperCase()}${user.role.slice(1)} Account`
+    : user?.email || 'Account';
 
   const navItems = [
     { label: 'Dashboard', path: '/dashboard', icon: <SquaresFour size={20} weight="fill" /> },
@@ -50,11 +57,11 @@ const Sidebar = ({ sidebarOpen, setSidebarOpen }) => {
 
         <div className="user-block">
           <div className="user-block-avatar">
-            <span style={{ fontWeight: '700', color: '#ffffff' }}>A</span>
+            <span style={{ fontWeight: '700', color: '#ffffff' }}>{userInitial}</span>
           </div>
           <div className="user-block-info">
-            <span className="name">Admin</span>
-            <span className="role">Admin Account</span>
+            <span className="name">{displayName}</span>
+            <span className="role">{accountLabel}</span>
           </div>
         </div>
       </div>
