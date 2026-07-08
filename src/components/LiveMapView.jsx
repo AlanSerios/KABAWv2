@@ -380,7 +380,6 @@ const LiveMapView = () => {
           center={[14.5995, 120.9842]} 
           zoom={6} 
           minZoom={3} 
-          maxBounds={[[-90, -180], [90, 180]]}
           maxBoundsViscosity={1.0}
           zoomControl={false} 
           style={{ width: '100%', height: '100%', zIndex: 0 }}
@@ -390,7 +389,6 @@ const LiveMapView = () => {
             url="https://server.arcgisonline.com/ArcGIS/rest/services/World_Imagery/MapServer/tile/{z}/{y}/{x}"
             attribution="Tiles &copy; Esri"
             maxZoom={20}
-            noWrap={true}
             keepBuffer={8}
             updateWhenZooming={false}
             updateWhenIdle={false}
@@ -399,7 +397,6 @@ const LiveMapView = () => {
           <TileLayer
             url="https://mt1.google.com/vt/lyrs=h&x={x}&y={y}&z={z}"
             maxZoom={20}
-            noWrap={true}
             keepBuffer={8}
             updateWhenZooming={false}
             updateWhenIdle={false}

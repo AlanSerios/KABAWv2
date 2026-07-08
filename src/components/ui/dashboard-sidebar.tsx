@@ -51,51 +51,18 @@ const mockBottomItems = [
   { id: 'logout', title: 'Log out', icon: LogOut, path: '/login' },
 ];
 
-export function WorkspaceSwitcher({ selected, onSelect }) {
-  const [isOpen, setIsOpen] = useState(false);
-  const [internalSelected, setInternalSelected] = useState('Kabaw Admin');
-  
-  const current = selected || internalSelected;
-  const handleSelect = onSelect || setInternalSelected;
-
+export function UserProfileBlock() {
   return (
     <div className="relative">
-      <div 
-        onClick={() => setIsOpen(!isOpen)}
-        className="flex items-center justify-between px-2 py-2 mb-4 rounded-lg hover:bg-black/5 dark:hover:bg-white/5 cursor-pointer transition-colors select-none group"
-      >
-        <div className="flex items-center gap-3">
-          <div className="w-8 h-8 rounded-[6px] bg-emerald-600 text-white flex items-center justify-center font-semibold text-[13px] shadow-sm">
-            K
-          </div>
-          <div className="flex flex-col overflow-hidden text-left">
-            <span className="text-[13px] font-medium leading-none mb-1 text-slate-900 truncate max-w-[120px]">{current}</span>
-            <span className="text-[11px] text-slate-500 leading-none">Enterprise Plan</span>
-          </div>
+      <div className="flex items-center gap-3 px-2 py-3 mb-4 rounded-lg bg-black/5 dark:bg-white/5 border border-black/5 dark:border-white/5 select-none cursor-default">
+        <div className="w-9 h-9 rounded-full overflow-hidden border-2 border-emerald-500/20 shadow-sm shrink-0">
+          <img src="https://api.dicebear.com/7.x/avataaars/svg?seed=Felix&backgroundColor=e2e8f0" alt="User Avatar" className="w-full h-full object-cover bg-slate-100" />
         </div>
-        <ChevronDown className="w-4 h-4 text-muted-foreground/50 group-hover:text-foreground/70 transition-colors shrink-0" strokeWidth={1.5} />
+        <div className="flex flex-col overflow-hidden text-left">
+          <span className="text-[14px] font-semibold leading-none mb-1 text-slate-900 truncate max-w-[120px]">Alan Serios</span>
+          <span className="text-[11px] font-medium text-emerald-600 leading-none">System Admin</span>
+        </div>
       </div>
-
-      {isOpen && (
-        <>
-          <div className="fixed inset-0 z-40" onClick={() => setIsOpen(false)} />
-          <div className="absolute top-[52px] left-0 w-full bg-card border border-border/50 rounded-lg shadow-xl z-50 py-1 flex flex-col gap-0.5 animate-in fade-in zoom-in-95 duration-100">
-            {['Kabaw Admin', 'Demo Farm'].map(ws => (
-              <div 
-                key={ws}
-                onClick={() => { handleSelect(ws); setIsOpen(false); }}
-                className={`px-3 py-2 mx-1 text-[13px] rounded-md cursor-pointer transition-colors ${current === ws ? 'bg-primary/10 text-primary font-medium' : 'text-foreground/80 hover:bg-black/5 dark:hover:bg-white/5'}`}
-              >
-                {ws}
-              </div>
-            ))}
-            <div className="h-px bg-border/50 my-1 mx-2" />
-            <div className="px-3 py-2 mx-1 text-[13px] text-emerald-600 hover:bg-black/5 dark:hover:bg-white/5 rounded-md cursor-pointer flex items-center gap-2 transition-colors">
-              <span className="text-[16px] leading-none mb-0.5">+</span> Create Workspace
-            </div>
-          </div>
-        </>
-      )}
     </div>
   );
 }
@@ -202,7 +169,7 @@ export function SidebarNav({
 
   return (
     <div className={`flex flex-col w-[260px] h-full bg-card/50 border-r border-border/50 p-3 font-sans ${className}`}>
-      <WorkspaceSwitcher selected={activeWorkspace} onSelect={onWorkspaceSelect} />
+      <UserProfileBlock />
 
       <div className="flex-1 overflow-y-auto [&::-webkit-scrollbar]:hidden [-ms-overflow-style:none] [scrollbar-width:none] flex flex-col gap-4 mt-2">
         {mockNavGroups.map((group, idx) => (
