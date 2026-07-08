@@ -26,7 +26,10 @@ KABAWv2 is a modern, real-time agricultural monitoring and typhoon tracking dash
 - **Mapping:** Leaflet & React-Leaflet
 - **Data Visualization:** Recharts
 - **Styling:** Vanilla CSS (Glassmorphism, CSS Variables, Flexbox)
-- **Live Data Sources:** GDACS (Global Disaster Alert and Coordination System), RainViewer API
+- **Live Data Sources & APIs Integration:**
+  - **GDACS API (Global Disaster Alert and Coordination System):** We utilize the GDACS REST API to fetch real-time, global disaster alerts. Specifically, we parse their JSON feeds to extract live coordinates, severity ratings, wind speeds, and historical/forecasted trajectory paths for Tropical Cyclones and Low Pressure Areas (LPAs).
+  - **RainViewer API:** Used to fetch the latest global weather radar frames. We poll this API to get real-time precipitation tile layers, allowing us to overlay live rain intensity animations directly onto the Leaflet map.
+  - **NOAA GFS (Global Forecast System):** We built a custom Node.js pipeline to download and parse GFS wind GRIB2 files, converting them into JSON vectors to visualize global wind patterns.
 
 ---
 
