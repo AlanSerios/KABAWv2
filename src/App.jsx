@@ -1,6 +1,7 @@
 import React, { useState } from 'react';
 import { BrowserRouter as Router, Routes, Route, Navigate, Outlet } from 'react-router-dom';
 import Sidebar from './components/Sidebar';
+import AppLayout from './components/AppLayout';
 import DashboardView from './components/DashboardView';
 import LiveMapView from './components/LiveMapView';
 import LoginPage from './components/LoginPage';
@@ -36,7 +37,7 @@ function App() {
         <Route path="/signup" element={<SignupPage />} />
         <Route path="/forgot-password" element={<ForgotPasswordPage />} />
         
-        <Route path="/dashboard" element={<DashboardLayout zones={zones} setZones={setZones} activeZoneId={activeZoneId} setActiveZoneId={setActiveZoneId} />}>
+        <Route path="/dashboard" element={<AppLayout zones={zones} setZones={setZones} activeZoneId={activeZoneId} setActiveZoneId={setActiveZoneId} />}>
           <Route index element={<DashboardView />} />
           <Route path="map" element={<LiveMapView />} />
         </Route>

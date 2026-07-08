@@ -1,6 +1,7 @@
 import React, { useState, useEffect, useRef } from 'react';
-import { useOutletContext } from 'react-router-dom';
+import { useOutletContext, useNavigate } from 'react-router-dom';
 import { MapContainer, TileLayer, WMSTileLayer, Marker, Popup, useMapEvents, useMap, Rectangle } from 'react-leaflet';
+import { motion, AnimatePresence } from 'framer-motion';
 import 'leaflet/dist/leaflet.css';
 import L from 'leaflet';
 import { Wind, NavigationArrow, MapTrifold, CloudRain, Plant, Fire, CloudLightning, MagnifyingGlass, WarningCircle, CheckCircle, PlusCircle, MapPin, CaretDown, CaretUp, Play, Pause, FastForward, SkipBack, Rewind, Path, CloudSnow } from '@phosphor-icons/react';
@@ -55,6 +56,7 @@ const MapController = ({ searchCoords }) => {
 
 const LiveMapView = () => {
   const { zones, setZones, activeZoneId, setActiveZoneId, sidebarOpen } = useOutletContext();
+  const navigate = useNavigate();
   const [addingNode, setAddingNode] = useState(false);
   const [pendingNodeCoords, setPendingNodeCoords] = useState(null);
   const [newZoneName, setNewZoneName] = useState("");
@@ -372,7 +374,7 @@ const LiveMapView = () => {
   const activeModeData = modes.find(m => m.id === satelliteMode);
 
   return (
-    <div className="main-content" style={{ display: 'flex', flexDirection: 'column', height: '100%', width: '100%' }}>
+    <div className="main-content" style={{ display: 'flex', flexDirection: 'column', height: '100%', width: '100%', overflow: 'hidden' }}>
       <div className={`map-wrapper ${satelliteMode}`} style={{ flex: 1, position: 'relative', height: '100%', width: '100%' }} ref={mapContainerRef}>
         <MapContainer 
           center={[14.5995, 120.9842]} 
@@ -419,7 +421,7 @@ const LiveMapView = () => {
           {zones.map((zone) => (
             <Marker key={zone.id} position={[zone.lat, zone.lng]} icon={createCustomMarker(zone.id === activeZoneId)}>
               <Popup>
-                <div className="custom-popup-content" style={{ fontFamily: 'Inter, sans-serif' }}>
+                <div className="custom-popup-content" style={{ fontFamily: "'Outfit', sans-serif" }}>
                   <h4 style={{ margin: '0 0 8px 0', fontSize: '1.1rem', color: '#0f172a' }}>{zone.name}</h4>
                   <div style={{ display: 'flex', alignItems: 'center', gap: '6px', marginBottom: '16px', fontSize: '0.85rem', color: zone.id === activeZoneId ? '#10b981' : '#64748b' }}>
                     {zone.id === activeZoneId && <CheckCircle weight="fill" />} 
@@ -428,15 +430,18 @@ const LiveMapView = () => {
                   
                   <div style={{ display: 'flex', flexDirection: 'column', gap: '8px' }}>
                     <button 
-                      onClick={() => setActiveZoneId(zone.id)}
+                      onClick={() => {
+                        setActiveZoneId(zone.id);
+                        navigate('/dashboard');
+                      }}
                       style={{ 
-                        padding: '10px 16px', background: '#f1f5f9', 
-                        color: '#0f172a', border: '1px solid #e2e8f0', borderRadius: '8px', 
+                        padding: '10px 16px', background: '#10b981', 
+                        color: '#ffffff', border: 'none', borderRadius: '8px', 
                         cursor: 'pointer', width: '100%', fontWeight: '600',
                         transition: 'background 0.2s', fontSize: '0.9rem'
                       }}
                     >
-                      Select
+                      View AI Advisory
                     </button>
                     
                     <button 
@@ -488,137 +493,128 @@ const LiveMapView = () => {
           </div>
         )}
 
-        {/* Top Right: Plot Location Button */}
-        <div style={{
-          position: 'absolute', top: '24px', right: '24px', zIndex: 1000, pointerEvents: 'none',
-          display: 'flex', flexDirection: 'column', gap: '12px', alignItems: 'flex-end'
-        }}>
-          <div style={{ pointerEvents: 'auto' }}>
-            <button 
-              style={{ 
-                padding: '12px 24px', 
-                background: addingNode ? 'linear-gradient(135deg, #f97316, #ea580c)' : 'rgba(15, 15, 20, 0.65)',
-                backdropFilter: 'blur(40px)', WebkitBackdropFilter: 'blur(40px)',
-                color: addingNode ? '#ffffff' : '#EDEDEF', 
-                border: '1px solid', borderColor: addingNode ? '#f97316' : 'rgba(255,255,255,0.05)', 
-                borderRadius: '999px',
-                boxShadow: addingNode ? '0 8px 20px rgba(249, 115, 22, 0.3)' : '0 8px 25px rgba(0,0,0,0.3)',
-                display: 'flex', alignItems: 'center', gap: '8px',
-                fontWeight: '600', fontSize: '0.95rem', cursor: 'pointer',
-                transition: 'all 0.3s cubic-bezier(0.4, 0, 0.2, 1)',
-                transform: addingNode ? 'scale(0.98)' : 'scale(1)'
-              }}
-              onClick={() => setAddingNode(!addingNode)}
-            >
-              <MapPin size={22} weight={addingNode ? "fill" : "bold"} color={addingNode ? "white" : "#10b981"} /> 
-              {addingNode ? "Click on map to drop pin..." : "Plot Location"}
-            </button>
-          </div>
-          
-          <div style={{ pointerEvents: 'auto' }}>
-            <button 
-              style={{ 
-                padding: '10px 16px', 
-                background: showWind ? 'linear-gradient(135deg, #10b981, #059669)' : 'rgba(15, 15, 20, 0.65)',
-                backdropFilter: 'blur(40px)', WebkitBackdropFilter: 'blur(40px)',
-                color: showWind ? '#ffffff' : '#EDEDEF', 
-                border: '1px solid', borderColor: showWind ? '#10b981' : 'rgba(255,255,255,0.05)', 
-                borderRadius: '999px',
-                boxShadow: showWind ? '0 8px 20px rgba(16, 185, 129, 0.3)' : '0 8px 25px rgba(0,0,0,0.3)',
-                display: 'flex', alignItems: 'center', gap: '8px',
-                fontWeight: '600', fontSize: '0.9rem', cursor: 'pointer',
-                transition: 'all 0.2s cubic-bezier(0.4, 0, 0.2, 1)'
-              }}
-              onClick={() => setShowWind(!showWind)}
-            >
-              <Wind size={20} weight={showWind ? "fill" : "bold"} color={showWind ? "white" : "#64748b"} /> 
-              {showWind ? "Wind: ON" : "Wind: OFF"}
-            </button>
-          </div>
-        </div>
-
+        {/* Top Right Controls - Removed to reduce clutter */}
+        
         {/* Top Left: Horizontal Legend */}
         {satelliteMode !== 'true-color' && (
           <div style={{
             position: 'absolute', top: '24px', left: '24px', zIndex: 1000, pointerEvents: 'auto',
-            background: 'rgba(25, 33, 44, 0.85)', backdropFilter: 'blur(12px)',
-            borderRadius: '999px', padding: '6px 16px', boxShadow: '0 10px 25px rgba(0,0,0,0.5)',
-            border: '1px solid rgba(255,255,255,0.1)', display: 'flex', alignItems: 'center', gap: '16px',
+            background: 'rgba(15, 23, 42, 0.85)', backdropFilter: 'blur(16px)',
+            borderRadius: '12px', padding: '10px 16px', boxShadow: '0 10px 25px rgba(0,0,0,0.4)',
+            border: '1px solid rgba(255,255,255,0.08)', display: 'flex', alignItems: 'center', gap: '16px',
             animation: 'slideInLeft 0.3s'
           }}>
             {satelliteMode === 'ndvi' && (
               <>
-                <div style={{ fontSize: '0.75rem', fontWeight: '600', color: '#f1f5f9' }}>NDVI</div>
-                <div style={{ display: 'flex', height: '14px', width: '250px', borderRadius: '4px', overflow: 'hidden' }}>
+                <div style={{ fontSize: '0.7rem', fontWeight: '700', color: '#f8fafc', textTransform: 'uppercase', letterSpacing: '0.05em' }}>NDVI</div>
+                <div style={{ display: 'flex', height: '6px', width: '200px', borderRadius: '99px', overflow: 'hidden' }}>
                   <div style={{ flex: 1, background: '#3b82f6' }} title="Water Body"></div>
                   <div style={{ flex: 1, background: '#cbd5e1' }} title="Barren / Urban"></div>
                   <div style={{ flex: 1, background: '#fcd34d' }} title="Stressed / Sparse"></div>
                   <div style={{ flex: 1, background: '#10b981' }} title="Healthy Vegetation"></div>
                 </div>
-                <div style={{ fontSize: '0.75rem', fontWeight: '600', color: '#f1f5f9' }}>Health</div>
+                <div style={{ fontSize: '0.7rem', fontWeight: '700', color: '#f8fafc', textTransform: 'uppercase', letterSpacing: '0.05em' }}>Kalusugan</div>
               </>
             )}
             
             {satelliteMode === 'sar' && (
               <>
-                <div style={{ fontSize: '0.75rem', fontWeight: '600', color: '#f1f5f9' }}>SAR</div>
-                <div style={{ display: 'flex', height: '14px', width: '250px', borderRadius: '4px', overflow: 'hidden' }}>
-                  <div style={{ flex: 1, background: '#000000' }} title="Deep Water / Flooded"></div>
-                  <div style={{ flex: 1, background: '#555555' }} title="Wet Soil / Saturated"></div>
-                  <div style={{ flex: 1, background: '#ffffff' }} title="Dry Land"></div>
+                <div style={{ fontSize: '0.7rem', fontWeight: '700', color: '#f8fafc', textTransform: 'uppercase', letterSpacing: '0.05em' }}>SAR</div>
+                <div style={{ display: 'flex', height: '6px', width: '200px', borderRadius: '99px', overflow: 'hidden' }}>
+                  <div style={{ flex: 1, background: '#0f172a' }} title="Deep Water / Flooded"></div>
+                  <div style={{ flex: 1, background: '#64748b' }} title="Wet Soil / Saturated"></div>
+                  <div style={{ flex: 1, background: '#f8fafc' }} title="Dry Land"></div>
                 </div>
-                <div style={{ fontSize: '0.75rem', fontWeight: '600', color: '#f1f5f9' }}>Flood</div>
+                <div style={{ fontSize: '0.7rem', fontWeight: '700', color: '#f8fafc', textTransform: 'uppercase', letterSpacing: '0.05em' }}>Baha</div>
               </>
             )}
             
             {satelliteMode === 'infrared' && (
               <>
-                <div style={{ fontSize: '0.75rem', fontWeight: '600', color: '#f1f5f9' }}>TEMP</div>
-                <div style={{ display: 'flex', height: '14px', width: '250px', borderRadius: '4px', overflow: 'hidden', background: 'linear-gradient(to right, #10b981, #c2410c, #d946ef, #991b1b)' }}>
+                <div style={{ fontSize: '0.7rem', fontWeight: '700', color: '#f8fafc', textTransform: 'uppercase', letterSpacing: '0.05em' }}>TEMP</div>
+                <div style={{ display: 'flex', height: '6px', width: '200px', borderRadius: '99px', overflow: 'hidden', background: 'linear-gradient(to right, #10b981, #c2410c, #d946ef, #991b1b)' }}>
                 </div>
-                <div style={{ fontSize: '0.75rem', fontWeight: '600', color: '#f1f5f9' }}>Extreme</div>
+                <div style={{ fontSize: '0.7rem', fontWeight: '700', color: '#f8fafc', textTransform: 'uppercase', letterSpacing: '0.05em' }}>Sobrang Init</div>
               </>
             )}
             
             {satelliteMode === 'weather' && (
               <>
-                <div style={{ fontSize: '0.75rem', fontWeight: '600', color: '#f1f5f9' }}>RAIN</div>
-                <div style={{ display: 'flex', height: '14px', width: '250px', borderRadius: '4px', overflow: 'hidden' }}>
-                  <div style={{ flex: 1, background: '#93c5fd', position: 'relative' }}>
-                    <span style={{ position: 'absolute', top: '-18px', left: '50%', transform: 'translateX(-50%)', fontSize: '0.65rem', color: '#f1f5f9', whiteSpace: 'nowrap' }}>Light</span>
-                  </div>
-                  <div style={{ flex: 1, background: '#3b82f6', position: 'relative' }}>
-                    <span style={{ position: 'absolute', top: '-18px', left: '50%', transform: 'translateX(-50%)', fontSize: '0.65rem', color: '#f1f5f9', whiteSpace: 'nowrap' }}>Mod</span>
-                  </div>
-                  <div style={{ flex: 1, background: '#eab308', position: 'relative' }}>
-                    <span style={{ position: 'absolute', top: '-18px', left: '50%', transform: 'translateX(-50%)', fontSize: '0.65rem', color: '#f1f5f9', whiteSpace: 'nowrap' }}>Heavy</span>
-                  </div>
-                  <div style={{ flex: 1, background: '#ef4444', position: 'relative' }}>
-                    <span style={{ position: 'absolute', top: '-18px', left: '50%', transform: 'translateX(-50%)', fontSize: '0.65rem', color: '#f1f5f9', whiteSpace: 'nowrap' }}>Severe</span>
-                  </div>
+                <div style={{ fontSize: '0.7rem', fontWeight: '700', color: '#f8fafc', textTransform: 'uppercase', letterSpacing: '0.05em' }}>ULAN</div>
+                <div style={{ display: 'flex', height: '6px', width: '200px', borderRadius: '99px', overflow: 'hidden' }}>
+                  <div style={{ flex: 1, background: '#93c5fd' }}></div>
+                  <div style={{ flex: 1, background: '#3b82f6' }}></div>
+                  <div style={{ flex: 1, background: '#eab308' }}></div>
+                  <div style={{ flex: 1, background: '#ef4444' }}></div>
                 </div>
-                <div style={{ fontSize: '0.75rem', fontWeight: '600', color: '#f1f5f9' }}>Storm</div>
+                <div style={{ fontSize: '0.7rem', fontWeight: '700', color: '#f8fafc', textTransform: 'uppercase', letterSpacing: '0.05em' }}>Malakas</div>
               </>
             )}
           </div>
         )}
 
 
-        {/* Bottom Center: Search Bar & Satellite Dropdown */}
-        <div className="map-controls-group" style={{
-          position: 'absolute', bottom: '24px', left: '50%', transform: 'translateX(-50%)',
-          zIndex: 1000, display: 'flex', gap: '12px', pointerEvents: 'auto', alignItems: 'center'
-        }}>
+        {/* Bottom Center: Consolidated Action Bar */}
+        <div style={{ position: 'absolute', bottom: '24px', left: '50%', transform: 'translateX(-50%)', zIndex: 1000, pointerEvents: 'none' }}>
+          <motion.div 
+            initial={{ opacity: 0, y: 30, filter: 'blur(12px)' }}
+            animate={{ opacity: 1, y: 0, filter: 'blur(0px)' }}
+            transition={{ duration: 0.8, ease: [0.16, 1, 0.3, 1], delay: 0.2 }}
+            className="map-controls-group" 
+            style={{
+              display: 'flex', gap: '8px', pointerEvents: 'auto', alignItems: 'center',
+              background: 'rgba(15, 23, 42, 0.75)', backdropFilter: 'blur(20px)', WebkitBackdropFilter: 'blur(20px)',
+              padding: '8px', borderRadius: '24px', border: '1px solid rgba(255,255,255,0.08)',
+              boxShadow: '0 20px 40px rgba(0,0,0,0.3)'
+            }}
+          >
           
-          {/* Dropdown Filters */}
-          <div style={{ position: 'relative', pointerEvents: 'auto' }}>
+          {/* Plot Location */}
+          <button 
+            style={{ 
+              padding: '10px 16px', 
+              background: addingNode ? '#10b981' : 'transparent',
+              color: addingNode ? '#ffffff' : '#94a3b8', 
+              border: 'none', borderRadius: '16px',
+              display: 'flex', alignItems: 'center', gap: '6px',
+              fontWeight: '600', fontSize: '0.85rem', cursor: 'pointer',
+              transition: 'all 0.2s',
+            }}
+            onClick={() => setAddingNode(!addingNode)}
+            title="Add Node"
+          >
+            <PlusCircle size={20} weight={addingNode ? "fill" : "regular"} className={addingNode ? "text-emerald-400" : ""} />
+            {addingNode ? "Select on Map..." : "Add Node"}
+          </button>
+
+          {/* Wind Toggle */}
+          <button 
+            style={{ 
+              padding: '10px 16px', 
+              background: showWind ? '#3b82f6' : 'transparent',
+              color: showWind ? '#ffffff' : '#94a3b8', 
+              border: 'none', borderRadius: '16px',
+              display: 'flex', alignItems: 'center', gap: '6px',
+              fontWeight: '600', fontSize: '0.85rem', cursor: 'pointer',
+              transition: 'all 0.2s'
+            }}
+            onClick={() => setShowWind(!showWind)}
+          >
+            <Wind size={20} weight={showWind ? "fill" : "regular"} className={showWind ? "text-blue-400" : ""} /> 
+            Wind
+          </button>
+
+          <div style={{ width: '1px', height: '24px', background: 'rgba(255,255,255,0.1)', margin: '0 4px' }}></div>
+
+          {/* Satellite Mode Dropdown */}
+          <div style={{ position: 'relative' }}>
             {dropdownOpen && (
               <div style={{
-                position: 'absolute', bottom: '100%', left: '0', marginBottom: '8px',
-                background: 'rgba(15, 15, 20, 0.65)', backdropFilter: 'blur(40px)', WebkitBackdropFilter: 'blur(40px)',
-                borderRadius: '12px', padding: '8px', boxShadow: '0 10px 25px rgba(0,0,0,0.3)',
-                border: '1px solid rgba(255,255,255,0.05)', display: 'flex', flexDirection: 'column', gap: '4px',
-                minWidth: '220px', animation: 'fadeIn 0.2s'
+                position: 'absolute', bottom: '100%', left: '50%', transform: 'translateX(-50%)', marginBottom: '12px',
+                background: 'rgba(15, 23, 42, 0.95)', backdropFilter: 'blur(20px)',
+                borderRadius: '16px', padding: '8px', boxShadow: '0 10px 30px rgba(0,0,0,0.4)',
+                border: '1px solid rgba(255,255,255,0.08)', display: 'flex', flexDirection: 'column', gap: '4px',
+                minWidth: '180px', animation: 'fadeIn 0.2s'
               }}>
                 {modes.map(mode => (
                   <button
@@ -629,13 +625,13 @@ const LiveMapView = () => {
                       if(mode.id !== 'true-color') setShowModeExplanation(true); 
                     }}
                     style={{
-                      display: 'flex', alignItems: 'center', gap: '8px',
-                      padding: '10px 16px', borderRadius: '8px', border: 'none',
-                      background: satelliteMode === mode.id ? 'rgba(255,255,255,0.08)' : 'transparent',
-                      color: satelliteMode === mode.id ? '#ffffff' : '#EDEDEF',
+                      display: 'flex', alignItems: 'center', gap: '10px',
+                      padding: '10px 14px', borderRadius: '10px', border: 'none',
+                      background: satelliteMode === mode.id ? 'rgba(255,255,255,0.1)' : 'transparent',
+                      color: satelliteMode === mode.id ? '#ffffff' : '#94a3b8',
                       fontWeight: satelliteMode === mode.id ? '600' : '500',
-                      cursor: 'pointer', transition: 'all 0.2s', fontSize: '0.9rem',
-                      textAlign: 'left', whiteSpace: 'nowrap'
+                      cursor: 'pointer', transition: 'all 0.2s', fontSize: '0.85rem',
+                      textAlign: 'left'
                     }}
                   >
                     {mode.icon} {mode.label}
@@ -646,48 +642,52 @@ const LiveMapView = () => {
             <button 
               onClick={() => setDropdownOpen(!dropdownOpen)} 
               style={{ 
-                background: 'rgba(15, 15, 20, 0.65)', backdropFilter: 'blur(40px)', WebkitBackdropFilter: 'blur(40px)',
-                padding: '12px 20px', borderRadius: '999px', border: '1px solid rgba(255,255,255,0.05)',
-                boxShadow: '0 10px 25px rgba(0,0,0,0.3)', display: 'flex', alignItems: 'center', gap: '8px',
-                fontWeight: '600', color: '#ffffff', cursor: 'pointer', fontSize: '0.95rem',
-                whiteSpace: 'nowrap'
+                background: 'rgba(255,255,255,0.05)',
+                padding: '10px 16px', borderRadius: '16px', border: '1px solid rgba(255,255,255,0.05)',
+                display: 'flex', alignItems: 'center', gap: '6px',
+                fontWeight: '600', color: '#f8fafc', cursor: 'pointer', fontSize: '0.85rem'
               }}
             >
               {activeModeData.icon} {activeModeData.label} 
-              {dropdownOpen ? <CaretUp size={16} /> : <CaretDown size={16} />}
+              {dropdownOpen ? <CaretUp size={14} /> : <CaretDown size={14} />}
             </button>
           </div>
 
+          <div style={{ width: '1px', height: '24px', background: 'rgba(255,255,255,0.1)', margin: '0 4px' }}></div>
+
           {/* Search Bar */}
-          <div className="map-search-container" style={{ pointerEvents: 'auto' }}>
+          <div className="map-search-container">
             <form onSubmit={handleSearch} style={{ 
-              display: 'flex', background: 'rgba(15, 15, 20, 0.65)', backdropFilter: 'blur(40px)', WebkitBackdropFilter: 'blur(40px)', 
-              borderRadius: '999px', padding: '6px 6px 6px 20px', boxShadow: '0 10px 25px rgba(0,0,0,0.3)', 
-              border: '1px solid rgba(255,255,255,0.05)', alignItems: 'center'
+              display: 'flex', background: 'rgba(0,0,0,0.2)', 
+              borderRadius: '16px', padding: '4px 4px 4px 16px', 
+              alignItems: 'center', border: '1px solid transparent',
+              transition: 'all 0.2s'
             }}>
-               <MagnifyingGlass size={20} color="#64748b" />
+               <MagnifyingGlass size={16} color="#64748b" />
                <input 
+                 className="search-input"
                  type="text" 
                  value={searchQuery} 
                  onChange={(e) => setSearchQuery(e.target.value)} 
-                 placeholder="Search a place (e.g. Manila)..." 
+                 onKeyDown={(e) => e.key === 'Enter' && handleSearch(e.target.value)} 
+                 placeholder="Search..." 
                  style={{ 
                    border: 'none', outline: 'none', background: 'transparent', 
-                   padding: '8px 12px', fontSize: '0.95rem', width: '220px', 
+                   padding: '6px 12px', fontSize: '0.85rem', width: '140px', 
                    fontWeight: '500', color: '#ffffff'
                  }} 
                />
                <button type="submit" style={{ 
-                 background: 'linear-gradient(135deg, #10b981, #059669)', color: '#ffffff', border: '1px solid rgba(255,255,255,0.1)', 
-                 padding: '10px 20px', borderRadius: '999px', fontWeight: '600', 
-                 cursor: 'pointer', fontSize: '0.9rem', transition: 'all 0.2s',
-                 boxShadow: '0 4px 15px rgba(16, 185, 129, 0.3)'
+                 background: '#10b981', color: '#ffffff', border: 'none', 
+                 padding: '8px 16px', borderRadius: '12px', fontWeight: '600', 
+                 cursor: 'pointer', fontSize: '0.8rem', transition: 'all 0.2s',
                }}>
-                 Search
+                 Go
                </button>
             </form>
           </div>
 
+          </motion.div>
         </div>
 
         {/* Centered Modal Explanation (Zoom Earth Style) */}
