@@ -5,7 +5,15 @@ import ReactMarkdown from 'react-markdown';
 import { motion, AnimatePresence } from 'framer-motion';
 import { MapContainer, TileLayer, Marker } from 'react-leaflet';
 import 'leaflet/dist/leaflet.css';
+import L from 'leaflet';
 import '../BentoDashboard.css';
+
+const customMarkerIcon = L.divIcon({
+  className: 'custom-dashboard-marker',
+  html: `<div style="width: 24px; height: 24px; background: #10b981; border: 3px solid white; border-radius: 50%; box-shadow: 0 4px 6px rgba(0,0,0,0.3); animation: pulse 2s infinite;"></div>`,
+  iconSize: [24, 24],
+  iconAnchor: [12, 12]
+});
 
 const DashboardView = () => {
   const { zones, activeZoneId } = useOutletContext();
@@ -172,7 +180,7 @@ const DashboardView = () => {
         <div className="absolute inset-0 z-0">
           <MapContainer 
             center={[activeZone.lat, activeZone.lng]} 
-            zoom={16} 
+            zoom={13} 
             zoomControl={false}
             scrollWheelZoom={false}
             doubleClickZoom={false}
@@ -184,7 +192,7 @@ const DashboardView = () => {
               attribution="Tiles &copy; Esri"
               maxZoom={19}
             />
-            <Marker position={[activeZone.lat, activeZone.lng]} />
+            <Marker position={[activeZone.lat, activeZone.lng]} icon={customMarkerIcon} />
           </MapContainer>
           {/* Overlay gradient to ensure text readability */}
           <div className="absolute inset-0 bg-gradient-to-r from-slate-900/90 via-slate-900/60 to-transparent z-10 pointer-events-none"></div>
