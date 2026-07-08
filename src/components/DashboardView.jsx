@@ -2,6 +2,7 @@ import React, { useState, useEffect } from 'react';
 import { CaretDown, DownloadSimple, SignOut, Thermometer, Drop, CloudSun, HandHeart, Plant, Bug } from '@phosphor-icons/react';
 import { useNavigate } from 'react-router-dom';
 import { LineChart, Line, XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContainer } from 'recharts';
+import { clearAuthSession, getAuthUser, getUserDisplayName, getUserInitial } from '../api/auth';
 
 // Realistic historical data
 const chartData = [
@@ -18,7 +19,13 @@ const chartData = [
 
 const DashboardView = () => {
   const navigate = useNavigate();
-  const handleLogout = () => navigate('/login');
+  const user = getAuthUser();
+  const displayName = getUserDisplayName(user);
+  const userInitial = getUserInitial(user);
+  const handleLogout = () => {
+    clearAuthSession();
+    navigate('/login');
+  };
   
   const [hasData, setHasData] = useState(true);
   const [activeTab, setActiveTab] = useState('Today'); // 'Today' or 'Weekly'
@@ -54,11 +61,11 @@ const DashboardView = () => {
       <div className="main-header">
         <div className="welcome-section">
           <div className="welcome-avatar">
-            <span style={{ fontWeight: '800', fontSize: '1.2rem', color: '#0f172a' }}>A</span>
+            <span style={{ fontWeight: '800', fontSize: '1.2rem', color: '#0f172a' }}>{userInitial}</span>
           </div>
           <div className="welcome-text">
             <span className="sub">Welcome Back,</span>
-            <span className="title">Admin</span>
+            <span className="title">{displayName}</span>
           </div>
         </div>
         <button className="logout-icon-btn" onClick={handleLogout}>
